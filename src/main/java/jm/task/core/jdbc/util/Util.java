@@ -13,26 +13,23 @@ public class Util {
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root1234";
 
-    public Connection getConnection() {
-        return connection;
-    }
-
-    private Util() {
+    public Connection getJdbcConnection() {
         try {
             Class.forName(DRIVER);
-            this.connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
+            connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
             System.out.println("Connection established");
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Database Connection Creation Failed : " + e.getMessage());
         }
+        return connection;
     }
 
     public static Util getInstance() {
         try {
             if (instance == null) {
                 instance = new Util();
-            } else if (instance.getConnection().isClosed()) {
+            } else if (instance.getJdbcConnection().isClosed()) {
                 instance = new Util();
             }
         } catch (SQLException e) {

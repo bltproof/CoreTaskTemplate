@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
 
-    private Connection connection = Util.getInstance().getConnection();
+    private Connection connection = Util.getInstance().getJdbcConnection();
 
     public UserDaoJDBCImpl() {
 
@@ -17,7 +17,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        String query = "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR (100) NOT NULL,\n" +
+        String query = "CREATE TABLE IF NOT EXISTS user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR (100) NOT NULL,\n" +
                 "lastName VARCHAR (100) NOT NULL,\n" +
                 "age INT NOT NULL,\n" +
                 "PRIMARY KEY (id))";
