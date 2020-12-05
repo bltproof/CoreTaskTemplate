@@ -1,8 +1,17 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Environment;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class Util {
     // реализуйте настройку соеденения с БД
@@ -12,6 +21,25 @@ public class Util {
     private static final String URL = "jdbc:mysql://localhost:3306/mysqldb?useUnicode=true&serverTimezone=UTC";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root1234";
+
+    public static SessionFactory getSessionFactory() {
+        StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
+
+        HashMap<String, String> dbSettings = new HashMap<>();
+        dbSettings.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
+        dbSettings.put(Environment.HBM2DDL_AUTO,"create-drop");
+        dbSettings.put(Environment.DRIVER, DRIVER);
+        dbSettings.put(Environment.USER, LOGIN);
+        dbSettings.put(Environment.PASS, PASSWORD);
+        dbSettings.put(Environment.URL, URL);
+
+        registryBuilder.applySettings(dbSettings);
+
+        StandardServiceRegistry registry = registryBuilder.build();
+        MetadataSources sources = new MetadataSources(registry).addAnnotatedClass(User.class);
+        Metadata metadata = sources.getMetadataBuilder().build();
+        return metadata.getSessionFactoryBuilder().build();
+    }
 
     public Connection getJdbcConnection() {
         try {
