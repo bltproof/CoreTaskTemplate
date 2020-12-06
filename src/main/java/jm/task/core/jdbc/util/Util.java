@@ -15,15 +15,14 @@ import java.util.HashMap;
 
 public class Util {
     // реализуйте настройку соеденения с БД
-    private static Util instance;
     private static Connection connection;
+    private static SessionFactory sessionFactory;
+    private static StandardServiceRegistry registry;
+
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/mysqldb?useUnicode=true&serverTimezone=UTC";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root1234";
-
-    private static SessionFactory sessionFactory;
-    private static StandardServiceRegistry registry;
 
 
     public static SessionFactory getSessionFactory() {
@@ -60,7 +59,7 @@ public class Util {
         return sessionFactory;
     }
 
-    public Connection getJdbcConnection() {
+    public static Connection getJdbcConnection() {
         try {
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
@@ -71,18 +70,4 @@ public class Util {
         }
         return connection;
     }
-
-    public static Util getInstance() {
-        try {
-            if (instance == null) {
-                instance = new Util();
-            } else if (instance.getJdbcConnection().isClosed()) {
-                instance = new Util();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return instance;
-    }
-
 }
