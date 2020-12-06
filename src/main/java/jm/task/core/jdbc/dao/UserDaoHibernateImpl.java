@@ -94,9 +94,8 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> users = new ArrayList<>();
         try {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("FROM users");
+            Query query = session.createQuery("FROM " + User.class.getSimpleName());
             users = query.list();
-            System.out.println(users);
             transaction.commit();
 
         } catch (Exception e) {
@@ -110,10 +109,9 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        String hql = "DELETE FROM users";
         try {
             transaction = session.beginTransaction();
-            Query query = session.createQuery(hql);
+            Query query = session.createQuery("DELETE FROM " + User.class.getSimpleName());
             query.executeUpdate();
             transaction.commit();
 

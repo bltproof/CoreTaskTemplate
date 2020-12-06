@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class Util {
     // реализуйте настройку соеденения с БД
     private static Util instance;
-    private Connection connection;
+    private static Connection connection;
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/mysqldb?useUnicode=true&serverTimezone=UTC";
     private static final String LOGIN = "root";
@@ -58,12 +58,6 @@ public class Util {
             }
         }
         return sessionFactory;
-    }
-
-    public static void shutdown() {
-        if (registry != null) {
-            StandardServiceRegistryBuilder.destroy(registry);
-        }
     }
 
     public Connection getJdbcConnection() {
