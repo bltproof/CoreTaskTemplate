@@ -23,7 +23,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 "PRIMARY KEY (id))";
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
+            statement.executeUpdate(query);
             System.out.println("Table Users has been created");
 
         } catch (SQLException e) {
@@ -36,7 +36,7 @@ public class UserDaoJDBCImpl implements UserDao {
         String query = "DROP TABLE IF EXISTS users";
         try {
             Statement statement = connection.createStatement();
-            statement.execute(query);
+            statement.executeUpdate(query);
             System.out.println("Table Users has been dropped");
 
         } catch (SQLException e) {
@@ -64,9 +64,9 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        String query = "DELETE FROM users WHERE id = '" + id + "'";
+        String query = String.format("DELETE FROM users WHERE id = %d", id);
         try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
+            statement.executeUpdate(query);
             System.out.printf("User with id: %d has been removed\n", id);
 
         } catch (SQLException e) {
@@ -103,7 +103,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public void cleanUsersTable() {
         String query = "DELETE FROM users";
         try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
+            statement.executeUpdate(query);
             System.out.println("Table Users has been cleaned");
 
         } catch (SQLException e) {
