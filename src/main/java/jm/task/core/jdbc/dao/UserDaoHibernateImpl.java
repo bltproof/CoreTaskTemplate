@@ -20,7 +20,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        String sql = "CREATE TABLE user\n" +
+        String sql = "CREATE TABLE IF NOT EXISTS users\n" +
                 "(id INT NOT NULL AUTO_INCREMENT,\n" +
                 "name VARCHAR (255) NOT NULL,\n" +
                 "last_name VARCHAR (255) NOT NULL,\n" +
@@ -42,7 +42,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        String sql = "DROP TABLE user";
+        String sql = "DROP TABLE users";
         try {
             transaction = session.beginTransaction();
             Query query = session.createSQLQuery(sql);
@@ -94,8 +94,8 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> users = new ArrayList<>();
         try {
             transaction = session.beginTransaction();
-            String sql = "select p from " + User.class.getSimpleName().toLowerCase() + " p";
-            users = (List<User>) session.createQuery(sql).list();
+            Query query = session.createQuery("FROM users");
+            users = query.list();
             System.out.println(users);
             transaction.commit();
 
@@ -110,10 +110,10 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        String sql = "DELETE FROM user";
+        String hql = "DELETE FROM users";
         try {
             transaction = session.beginTransaction();
-            Query query = session.createSQLQuery(sql);
+            Query query = session.createQuery(hql);
             query.executeUpdate();
             transaction.commit();
 
