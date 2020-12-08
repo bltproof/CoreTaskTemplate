@@ -45,20 +45,26 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     @Override
-    public void saveUser(String name, String lastName, byte age) {
-        String query = "INSERT INTO users (NAME, LASTNAME, AGE) VALUES(?, ?, ?)";
+    public void saveUser(String name, String lastName, byte age) throws SQLException {
+        String query = "INSERT INTO users (name, lastName, age) VALUES(?, ?, ?)";
+        connection.setAutoCommit(false);
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
 
+            connection.commit();
+
             System.out.printf("User с именем %s добавлен в базу данных\n", name);
 
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
+
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 
