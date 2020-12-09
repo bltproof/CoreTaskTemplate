@@ -69,14 +69,21 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     @Override
-    public void removeUserById(long id) {
+    public void removeUserById(long id) throws SQLException {
         String query = String.format("DELETE FROM users WHERE id = %d", id);
+        connection.setAutoCommit(false);
+
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            connection.commit();
             System.out.printf("User with id: %d has been removed\n", id);
 
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
+
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 
@@ -106,14 +113,21 @@ public class UserDaoJDBCImpl implements UserDao {
         return userList;
     }
 
-    public void cleanUsersTable() {
+    public void cleanUsersTable() throws SQLException {
         String query = "DELETE FROM users";
+        connection.setAutoCommit(false);
+
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
+            connection.commit();
             System.out.println("Table Users has been cleaned");
 
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
+
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 }
